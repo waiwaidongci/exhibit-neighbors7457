@@ -39,3 +39,27 @@ def validate_parameters(params):
             if n!=int(n):raise ValueError(k+'必须为整数')
             out[k]=int(n)
     return out
+def validate_grid(raw):
+    """校验嵌套留一研究的候选参数网格：候选邻居数与共同评分门槛均由页面指定。"""
+    if not isinstance(raw,dict):raise ValueError('候选参数必须是对象')
+    if set(raw)!={'neighbors','min_common'}:raise ValueError('候选参数只支持 neighbors 与 min_common')
+    bounds={'neighbors':(1,20),'min_common':(2,10)}
+    grid={}
+    for key,(lo,hi) in bounds.items():
+        vals=raw.get(key)
+        if not isinstance(vals,list) or not vals:raise ValueError(key+'候选至少包含一个值，且必须是数组')
+        if len(vals)>12:raise ValueError(key+'候选最多12个值')
+        checked=[]
+        for v in vals:
+            if isinstance(v,bool):raise ValueError(key+'候选必须为整数')
+            try:n=float(v)
+            except (TypeError,ValueError):raise ValueError(key+'候选必须为数值')
+            if not math.isfinite(n) or n!=int(n):raise ValueError(key+'候选必须为整数')
+            n=int(n)
+            if not lo<=n<=hi:raise ValueError(f'{key}候选需在{lo}至{hi}之间')
+            checked.append(n)
+        if len(set(checked))!=len(checked):raise ValueError(key+'候选存在重复值')
+        grid[key]=sorted(checked)
+    if len(grid['neighbors'])*len(grid['min_common'])>100:
+        raise ValueError('候选参数组合不可超过100组')
+    return grid

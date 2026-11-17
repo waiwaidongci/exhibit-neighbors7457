@@ -21,6 +21,8 @@ export const domain = {
   "record_table": "visitor_ratings",
   "run_table": "recommendation_runs",
   "note_table": "curator_selections",
+  "nested_study_table": "nested_loocv_studies",
+  "nested_fold_table": "nested_loocv_folds",
   "eyebrow": "CURATOR INDEX / 45",
   "headline": "从相似的偏好，发现下一件展品。",
   "subtitle": "苇谱展陈工作室 · 显式评分邻居推荐与冷启动",
